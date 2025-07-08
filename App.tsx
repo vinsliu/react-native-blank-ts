@@ -1,21 +1,34 @@
 import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Platform, StyleSheet, StatusBar } from "react-native";
-import { RootStackParamList } from "./router";
 import Home from "./components/Home";
 import Settings from "./components/Settings";
-import Details from "./components/Details";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { Routes } from "./router";
+import News from "./components/News";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+
+const Tab = createBottomTabNavigator<Routes>();
+const Drawer = createDrawerNavigator<Routes>();
 
 export default function App() {
-  const Stack = createNativeStackNavigator<RootStackParamList>();
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="Settings" component={Settings} />
-        <Stack.Screen name="Details" component={Details} />
-      </Stack.Navigator>
+      {Platform.OS === "ios" && (
+        <Tab.Navigator>
+          <Tab.Screen name="Home" component={Home} />
+          <Tab.Screen name="News" component={News} />
+          <Tab.Screen name="Settings" component={Settings} />
+        </Tab.Navigator>
+      )}
+
+      {Platform.OS === "android" && (
+        <Drawer.Navigator>
+          <Tab.Screen name="Home" component={Home} />
+          <Tab.Screen name="News" component={News} />
+          <Tab.Screen name="Settings" component={Settings} />
+        </Drawer.Navigator>
+      )}
     </NavigationContainer>
   );
 }
